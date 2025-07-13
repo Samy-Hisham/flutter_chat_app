@@ -1,5 +1,5 @@
 import 'package:chat_app/cubit/auth_cubits/login_cubit/login_cubit.dart';
-import 'package:chat_app/cubit/auth_cubits/auth_states.dart';
+import 'package:chat_app/cubit/auth_cubits/login_cubit/login_states.dart';
 import 'package:chat_app/cubit/simple_bloc_obs.dart';
 import 'package:chat_app/firebase_options.dart';
 import 'package:chat_app/view/chat_view.dart';
@@ -17,7 +17,6 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const ChatApp());
-
 }
 
 class ChatApp extends StatelessWidget {

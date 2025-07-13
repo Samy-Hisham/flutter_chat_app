@@ -1,10 +1,12 @@
-import 'package:chat_app/cubit/auth_cubits/auth_states.dart';
+import 'package:chat_app/cubit/auth_cubits/login_cubit/login_states.dart';
 import 'package:chat_app/cubit/auth_cubits/register_cubit/register_cubit.dart';
 import 'package:chat_app/helpers/helpers.dart';
 import 'package:chat_app/widget/custom_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
+
+import '../cubit/auth_cubits/register_cubit/register_states.dart';
 
 class RegisterView extends StatefulWidget {
   const RegisterView({super.key});
@@ -21,24 +23,24 @@ class _RegisterViewState extends State<RegisterView> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<RegisterCubit, AuthState>(
+    return BlocListener<RegisterCubit, RegisterState>(
       listener: (context, state) {
-        if (state is AuthenticatedState) {
+        if (state is SuccessLoginState) {
           Navigator.pushNamedAndRemoveUntil(
             context,
             Helpers.CHAT_VIEW_ROUTE,
             (route) => false,
           );
-        } else if (state is UnauthenticatedState) {
+        } else if (state is FailureRegisterState) {
           Helpers.showSnackBar(context, state.errorMessage);
-        } else if (state is ErrorAuthState) {
+        } else if (state is ErrorRegisterState) {
           Helpers.showSnackBar(context, state.errorMessage);
         }
       },
-      child: BlocBuilder<RegisterCubit, AuthState>(
+      child: BlocBuilder<RegisterCubit, RegisterState>(
         builder: (context, state) {
           return ModalProgressHUD(
-            inAsyncCall: state is LoadingAuthState,
+            inAsyncCall: state is LoadingLoginState,
             child: Scaffold(
               backgroundColor: Helpers.kPrimaryColor,
               body: Padding(
@@ -101,15 +103,6 @@ class _RegisterViewState extends State<RegisterView> {
                               context,
                             ).register(email!, password!);
                           }
-                          // if (state is AuthenticatedState) {
-                          //   Navigator.pushNamedAndRemoveUntil(
-                          //     context,
-                          //     Helpers.CHAT_VIEW_ROUTE,
-                          //     (route) => false,
-                          //   );
-                          // } else if (state is UnauthenticatedState) {
-                          //   Helpers.showSnackBar(context, state.errorMessage);
-                          // }
                         },
                         child: Text('REGISTER'),
                       ),
