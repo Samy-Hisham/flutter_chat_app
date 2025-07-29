@@ -23,115 +23,121 @@ class _RegisterViewState extends State<RegisterView> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<RegisterCubit, RegisterState>(
-      listener: (context, state) {
-        if (state is SuccessLoginState) {
-          Navigator.pushNamedAndRemoveUntil(
-            context,
-            Helpers.CHAT_VIEW_ROUTE,
-            (route) => false,
-          );
-        } else if (state is FailureRegisterState) {
-          Helpers.showSnackBar(context, state.errorMessage);
-        } else if (state is ErrorRegisterState) {
-          Helpers.showSnackBar(context, state.errorMessage);
-        }
-      },
-      child: BlocBuilder<RegisterCubit, RegisterState>(
-        builder: (context, state) {
-          return ModalProgressHUD(
-            inAsyncCall: state is LoadingLoginState,
-            child: Scaffold(
-              backgroundColor: Helpers.kPrimaryColor,
-              body: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                child: Form(
-                  key: formKey,
-                  child: ListView(
-                    children: [
-                      SizedBox(height: 75),
-                      Image.asset('assets/images/scholar.png', height: 100),
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 24.0),
-                        child: Row(
+    return BlocProvider(
+      create: (context) => RegisterCubit(),
+      child: BlocListener<RegisterCubit, RegisterState>(
+        listener: (context, state) {
+          if (state is SuccessLoginState) {
+            Navigator.pushNamedAndRemoveUntil(
+              context,
+              Helpers.CHAT_VIEW_ROUTE,
+                  (route) => false,
+            );
+          } else if (state is FailureRegisterState) {
+            Helpers.showSnackBar(context, state.errorMessage);
+          } else if (state is ErrorRegisterState) {
+            Helpers.showSnackBar(context, state.errorMessage);
+          }
+        },
+        child: BlocBuilder<RegisterCubit, RegisterState>(
+          builder: (context, state) {
+            return ModalProgressHUD(
+              inAsyncCall: state is LoadingLoginState,
+              child: Scaffold(
+                backgroundColor: Helpers.kPrimaryColor,
+                body: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: Form(
+                    key: formKey,
+                    child: ListView(
+                      children: [
+                        SizedBox(height: 75),
+                        Image.asset('assets/images/scholar.png', height: 100),
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 24.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Scholar Chat',
+                                style: TextStyle(
+                                  fontSize: 32,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                  fontFamily: 'Pacifico',
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Row(
+                          children: [
+                            Text(
+                              'REGISTER',
+                              style: TextStyle(
+                                  fontSize: 24, color: Colors.white),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 5),
+                        CustomTextFormField(
+                          hintText: 'Email',
+                          onChanged: (data) {
+                            email = data;
+                          },
+                        ),
+                        SizedBox(height: 10),
+                        CustomTextFormField(
+                          hintText: 'Password',
+                          onChanged: (data) {
+                            password = data;
+                          },
+                        ),
+                        SizedBox(height: 10),
+                        TextButton(
+                          style: TextButton.styleFrom(
+                            backgroundColor: Colors.white,
+                            foregroundColor: Colors.black,
+                            minimumSize: Size(double.infinity, 50),
+                          ),
+                          onPressed: () async {
+                            if (formKey.currentState!.validate()) {
+                              BlocProvider.of<RegisterCubit>(
+                                context,
+                              ).register(email!, password!);
+                              // ask about listener ?
+                              // Navigator.pushNamed(context, Helpers.CHAT_VIEW_ROUTE);
+                            }
+                          },
+                          child: Text('REGISTER'),
+                        ),
+                        SizedBox(height: 10),
+                        Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              'Scholar Chat',
-                              style: TextStyle(
-                                fontSize: 32,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                                fontFamily: 'Pacifico',
+                              'already have an account?',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.pop(context);
+                              },
+                              child: Text(
+                                ' Login',
+                                style: TextStyle(color: Color(0xffC7EDE6)),
                               ),
                             ),
                           ],
                         ),
-                      ),
-                      Row(
-                        children: [
-                          Text(
-                            'REGISTER',
-                            style: TextStyle(fontSize: 24, color: Colors.white),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 5),
-                      CustomTextFormField(
-                        hintText: 'Email',
-                        onChanged: (data) {
-                          email = data;
-                        },
-                      ),
-                      SizedBox(height: 10),
-                      CustomTextFormField(
-                        hintText: 'Password',
-                        onChanged: (data) {
-                          password = data;
-                        },
-                      ),
-                      SizedBox(height: 10),
-                      TextButton(
-                        style: TextButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          foregroundColor: Colors.black,
-                          minimumSize: Size(double.infinity, 50),
-                        ),
-                        onPressed: () async {
-                          if (formKey.currentState!.validate()) {
-                            BlocProvider.of<RegisterCubit>(
-                              context,
-                            ).register(email!, password!);
-                          }
-                        },
-                        child: Text('REGISTER'),
-                      ),
-                      SizedBox(height: 10),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            'already have an account?',
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.pop(context);
-                            },
-                            child: Text(
-                              ' Login',
-                              style: TextStyle(color: Color(0xffC7EDE6)),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }

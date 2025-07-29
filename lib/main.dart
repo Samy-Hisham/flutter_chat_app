@@ -24,21 +24,13 @@ class ChatApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider<LoginCubit>(
-          create: (context) => LoginCubit(),
-        ),
-        BlocProvider(create: (context) => RegisterCubit()),
-      ],
-      child: MaterialApp(
-        routes: {
-          Helpers.LOGIN_VIEW_ROUTE: (context) => LoginView(),
-          Helpers.REGISTER_VIEW_ROUTE: (context) => RegisterView(),
-          Helpers.CHAT_VIEW_ROUTE: (context) => ChatView()
-        },
-        initialRoute: Helpers.LOGIN_VIEW_ROUTE,
-      ),
+    return MaterialApp(
+      routes: {
+        Helpers.LOGIN_VIEW_ROUTE: (context) => LoginView(),
+        Helpers.REGISTER_VIEW_ROUTE: (context) => RegisterView(),
+        Helpers.CHAT_VIEW_ROUTE: (context) => ChatView()
+      },
+      initialRoute: Helpers.LOGIN_VIEW_ROUTE,
     );
   }
 }

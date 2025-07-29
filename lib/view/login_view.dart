@@ -22,112 +22,118 @@ class _LoginViewState extends State<LoginView> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<LoginCubit, LoginState>(
-      listener: (context, state) {
-        if (state is SuccessLoginState) {
-          Navigator.pushNamed(context, Helpers.CHAT_VIEW_ROUTE);
-        } else if (state is FailureLoginState) {
-          Helpers.showSnackBar(context, state.errorMessage);
-        } else if (state is FailureLoginState) {
-          Helpers.showSnackBar(context, state.errorMessage);
-        }
-      },
-      child: BlocBuilder<LoginCubit, LoginState>(
-        builder: (context, state) {
-          return ModalProgressHUD(
-            inAsyncCall: state is LoadingLoginState,
-            child: Form(
-              key: formKey,
-              child: Scaffold(
-                backgroundColor: Helpers.kPrimaryColor,
-                body: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: ListView(
-                    children: [
-                      SizedBox(height: 75),
-                      // Spacer(flex: 2),
-                      Image.asset('assets/images/scholar.png', height: 100),
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 24.0),
-                        child: Row(
+    return BlocProvider(
+      create: (context) => LoginCubit(),
+      child: BlocListener<LoginCubit, LoginState>(
+        listener: (context, state) {
+          if (state is SuccessLoginState) {
+            Navigator.pushNamed(context, Helpers.CHAT_VIEW_ROUTE,
+                arguments: email);
+          } else if (state is FailureLoginState) {
+            Helpers.showSnackBar(context, state.errorMessage);
+          } else if (state is FailureLoginState) {
+            Helpers.showSnackBar(context, state.errorMessage);
+          }
+        },
+        child: BlocBuilder<LoginCubit, LoginState>(
+          builder: (context, state) {
+            return ModalProgressHUD(
+              inAsyncCall: state is LoadingLoginState,
+              child: Form(
+                key: formKey,
+                child: Scaffold(
+                  backgroundColor: Helpers.kPrimaryColor,
+                  body: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: ListView(
+                      children: [
+                        SizedBox(height: 75),
+                        // Spacer(flex: 2),
+                        Image.asset('assets/images/scholar.png', height: 100),
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 24.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Scholar Chat',
+                                style: TextStyle(
+                                  fontSize: 32,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                  fontFamily: 'Pacifico',
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        // Spacer(flex: 2),
+                        Row(
+                          children: [
+                            Text(
+                              'LOGIN',
+                              style: TextStyle(
+                                  fontSize: 24, color: Colors.white),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 5),
+                        CustomTextFormField(
+                          hintText: 'Email',
+                          onChanged: (data) {
+                            email = data;
+                          },
+                        ),
+                        SizedBox(height: 10),
+                        CustomTextFormField(
+                          hintText: 'Password',
+                          onChanged: (data) {
+                            password = data;
+                          },
+                          obscureText: true,
+                        ),
+                        SizedBox(height: 10),
+                        CustomBtn(
+                          onTap: () {
+                            if (formKey.currentState!.validate()) {
+                              BlocProvider.of<LoginCubit>(
+                                context,
+                              ).login(email!, password!);
+                            }
+                          },
+                          txt: 'LOGIN',
+                        ),
+                        SizedBox(height: 10),
+                        Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              'Scholar Chat',
-                              style: TextStyle(
-                                fontSize: 32,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                                fontFamily: 'Pacifico',
+                              'don\'t have an account?',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                // Navigate to Register View
+                                Navigator.pushNamed(
+                                  context,
+                                  Helpers.REGISTER_VIEW_ROUTE,
+                                );
+                              },
+                              child: Text(
+                                ' Register',
+                                style: TextStyle(color: Color(0xffC7EDE6)),
                               ),
                             ),
                           ],
                         ),
-                      ),
-                      // Spacer(flex: 2),
-                      Row(
-                        children: [
-                          Text(
-                            'LOGIN',
-                            style: TextStyle(fontSize: 24, color: Colors.white),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 5),
-                      CustomTextFormField(
-                        hintText: 'Email',
-                        onChanged: (data) {
-                          email = data;
-                        },
-                      ),
-                      SizedBox(height: 10),
-                      CustomTextFormField(
-                        hintText: 'Password',
-                        onChanged: (data) {
-                          password = data;
-                        },
-                      ),
-                      SizedBox(height: 10),
-                      CustomBtn(
-                        onTap: () {
-                          if (formKey.currentState!.validate()) {
-                            BlocProvider.of<LoginCubit>(
-                              context,
-                            ).login(email!, password!);
-                          }
-                        },
-                        txt: 'LOGIN',
-                      ),
-                      SizedBox(height: 10),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            'don\'t have an account?',
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              // Navigate to Register View
-                              Navigator.pushNamed(
-                                context,
-                                Helpers.REGISTER_VIEW_ROUTE,
-                              );
-                            },
-                            child: Text(
-                              ' Register',
-                              style: TextStyle(color: Color(0xffC7EDE6)),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }
