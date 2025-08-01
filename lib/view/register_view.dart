@@ -1,12 +1,15 @@
 import 'package:chat_app/cubit/auth_cubits/login_cubit/login_states.dart';
 import 'package:chat_app/cubit/auth_cubits/register_cubit/register_cubit.dart';
 import 'package:chat_app/helpers/helpers.dart';
+import 'package:chat_app/widget/custom_btn.dart';
 import 'package:chat_app/widget/custom_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
+import 'package:provider/provider.dart';
 
 import '../cubit/auth_cubits/register_cubit/register_states.dart';
+import '../themes/theme_provider.dart';
 
 class RegisterView extends StatefulWidget {
   const RegisterView({super.key});
@@ -31,7 +34,7 @@ class _RegisterViewState extends State<RegisterView> {
             Navigator.pushNamedAndRemoveUntil(
               context,
               Helpers.CHAT_VIEW_ROUTE,
-                  (route) => false,
+              (route) => false,
             );
           } else if (state is FailureRegisterState) {
             Helpers.showSnackBar(context, state.errorMessage);
@@ -44,7 +47,9 @@ class _RegisterViewState extends State<RegisterView> {
             return ModalProgressHUD(
               inAsyncCall: state is LoadingLoginState,
               child: Scaffold(
-                backgroundColor: Helpers.kPrimaryColor,
+                backgroundColor: Provider.of<ThemeProvider>(
+                  context,
+                ).appBarColor,
                 body: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
                   child: Form(
@@ -75,7 +80,9 @@ class _RegisterViewState extends State<RegisterView> {
                             Text(
                               'REGISTER',
                               style: TextStyle(
-                                  fontSize: 24, color: Colors.white),
+                                fontSize: 24,
+                                color: Colors.white,
+                              ),
                             ),
                           ],
                         ),
@@ -94,22 +101,17 @@ class _RegisterViewState extends State<RegisterView> {
                           },
                         ),
                         SizedBox(height: 10),
-                        TextButton(
-                          style: TextButton.styleFrom(
-                            backgroundColor: Colors.white,
-                            foregroundColor: Colors.black,
-                            minimumSize: Size(double.infinity, 50),
-                          ),
-                          onPressed: () async {
+                        CustomBtn(
+                          txt: 'REGISTER',
+                          onTap: () {
                             if (formKey.currentState!.validate()) {
-                              BlocProvider.of<RegisterCubit>(
-                                context,
-                              ).register(email!, password!);
-                              // ask about listener ?
-                              // Navigator.pushNamed(context, Helpers.CHAT_VIEW_ROUTE);
+                              formKey.currentState!.save();
+                              context.read<RegisterCubit>().register(
+                                email: email!,
+                                password: password!,
+                              );
                             }
                           },
-                          child: Text('REGISTER'),
                         ),
                         SizedBox(height: 10),
                         Row(
@@ -125,7 +127,11 @@ class _RegisterViewState extends State<RegisterView> {
                               },
                               child: Text(
                                 ' Login',
-                                style: TextStyle(color: Color(0xffC7EDE6)),
+                                style: TextStyle(
+                                  color: Provider.of<ThemeProvider>(
+                                    context,
+                                  ).backgroundColor,
+                                ),
                               ),
                             ),
                           ],

@@ -6,6 +6,9 @@ import 'package:chat_app/widget/custom_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
+import 'package:provider/provider.dart';
+
+import '../themes/theme_provider.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -27,8 +30,11 @@ class _LoginViewState extends State<LoginView> {
       child: BlocListener<LoginCubit, LoginState>(
         listener: (context, state) {
           if (state is SuccessLoginState) {
-            Navigator.pushNamed(context, Helpers.CHAT_VIEW_ROUTE,
-                arguments: email);
+            Navigator.pushNamed(
+              context,
+              Helpers.CHAT_VIEW_ROUTE,
+              arguments: email,
+            );
           } else if (state is FailureLoginState) {
             Helpers.showSnackBar(context, state.errorMessage);
           } else if (state is FailureLoginState) {
@@ -42,13 +48,36 @@ class _LoginViewState extends State<LoginView> {
               child: Form(
                 key: formKey,
                 child: Scaffold(
-                  backgroundColor: Helpers.kPrimaryColor,
+                  backgroundColor: Provider.of<ThemeProvider>(
+                    context,
+                  ).appBarColor,
                   body: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 8.0),
                     child: ListView(
                       children: [
-                        SizedBox(height: 75),
-                        // Spacer(flex: 2),
+                        SizedBox(height: 10,),
+                        IconButton(
+                          alignment: Alignment.topRight,
+                          icon: Icon(
+                            Provider.of<ThemeProvider>(context).themeMode ==
+                                ThemeMode.dark
+                                ? Icons.light_mode
+                                : Icons.dark_mode,
+                          ),
+                          color: Colors.white,
+                          onPressed: () {
+                            final currentTheme = Provider.of<ThemeProvider>(
+                              context,
+                              listen: false,
+                            );
+                            currentTheme.changeTheme(
+                              currentTheme.themeMode == ThemeMode.dark
+                                  ? ThemeMode.light
+                                  : ThemeMode.dark,
+                            );
+                          },
+                        ),
+                        SizedBox(height: 55),
                         Image.asset('assets/images/scholar.png', height: 100),
                         Padding(
                           padding: const EdgeInsets.only(bottom: 24.0),
@@ -73,7 +102,9 @@ class _LoginViewState extends State<LoginView> {
                             Text(
                               'LOGIN',
                               style: TextStyle(
-                                  fontSize: 24, color: Colors.white),
+                                fontSize: 24,
+                                color: Colors.white,
+                              ),
                             ),
                           ],
                         ),
@@ -94,14 +125,15 @@ class _LoginViewState extends State<LoginView> {
                         ),
                         SizedBox(height: 10),
                         CustomBtn(
+                          txt: 'LOGIN',
                           onTap: () {
                             if (formKey.currentState!.validate()) {
+                              // Trigger the login process
                               BlocProvider.of<LoginCubit>(
                                 context,
                               ).login(email!, password!);
                             }
                           },
-                          txt: 'LOGIN',
                         ),
                         SizedBox(height: 10),
                         Row(
@@ -121,7 +153,11 @@ class _LoginViewState extends State<LoginView> {
                               },
                               child: Text(
                                 ' Register',
-                                style: TextStyle(color: Color(0xffC7EDE6)),
+                                style: TextStyle(
+                                  color: Provider.of<ThemeProvider>(
+                                    context,
+                                  ).backgroundColor,
+                                ),
                               ),
                             ),
                           ],

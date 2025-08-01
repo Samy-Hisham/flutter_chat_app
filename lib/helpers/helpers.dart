@@ -1,8 +1,18 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../themes/theme_provider.dart';
 
 class Helpers {
   static final kPrimaryColor = Color(0xff2B475E);
+  static final kPrimaryFriendColor = Color(0xff006D84);
+  static final kPrimaryBgColor = Color(0xffAACECC);
+  static final kPrimaryWordsColor = Color(0xffC7EDE6);
+  static final kSecondaryColor = Color(0xff342418);
+  static final kSecondaryFriendColor = Color(0xFF7D6B5A);
+  static final kSecondaryBgColor = Color(0xffF5E9DA);
+  static final kSecondaryWordsColor = Color(0xffd3bca5);
 
    static const String LOGIN_VIEW_ROUTE = '/login';
    static const String REGISTER_VIEW_ROUTE = '/register';
@@ -14,7 +24,9 @@ class Helpers {
 
   static void showSnackBar(BuildContext context, String message, {Color? color}) {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message), backgroundColor: color),
+      SnackBar(content: Text(message), backgroundColor:  Provider.of<ThemeProvider>(
+        context,
+      ).appBarColor),
     );
   }
 }

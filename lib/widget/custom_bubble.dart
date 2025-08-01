@@ -4,10 +4,11 @@ import 'package:intl/intl.dart'; // Import the intl package
 import '../helpers/helpers.dart';
 
 class CustomBubble extends StatelessWidget {
-  const CustomBubble({super.key, required this.messageModel});
+  const CustomBubble({super.key, required this.messageModel, required this.color, required this.textColor});
 
   final MessageModel messageModel;
-
+  final Color color;
+  final Color textColor;
   @override
   Widget build(BuildContext context) {
     return Align(
@@ -21,7 +22,7 @@ class CustomBubble extends StatelessWidget {
             topRight: Radius.circular(24),
             bottomRight: Radius.circular(24),
           ),
-          color: Helpers.kPrimaryColor,
+          color: color,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.end,
@@ -30,14 +31,14 @@ class CustomBubble extends StatelessWidget {
               messageModel.message,
               style: TextStyle(
                 fontWeight: FontWeight.bold,
-                color: Colors.white,
+                color:textColor,
               ),
             ),
             SizedBox(height: 4),
             Text(
               DateFormat.jm().format(messageModel.createdAt.toDate()),
               // messageModel.createdAt.toDate().toString().substring(11, 16),
-              style: TextStyle(fontSize: 10, color: Colors.white),
+              style: TextStyle(fontSize: 10, color: textColor),
             ),
           ],
         ),
@@ -49,8 +50,9 @@ class CustomBubble extends StatelessWidget {
 class CustomFriendBubble extends StatelessWidget {
   final MessageModel messageModel;
 
-  const CustomFriendBubble({super.key, required this.messageModel});
-
+  const CustomFriendBubble({super.key, required this.messageModel, required this.color, required this.textColor});
+  final Color color;
+  final Color textColor;
   @override
   Widget build(BuildContext context) {
     return Align(
@@ -64,20 +66,20 @@ class CustomFriendBubble extends StatelessWidget {
             topRight: Radius.circular(24),
             bottomLeft: Radius.circular(24),
           ),
-          color: Color(0xff006D84),
+          color:  color,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             Text(
               messageModel.message,
-              style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+              style: TextStyle(fontWeight: FontWeight.bold, color: textColor),
             ),
             SizedBox(height: 4),
             Text(
               DateFormat.jm().format(messageModel.createdAt.toDate()),
               // messageModel.createdAt.toDate().toString().substring(11, 16),
-              style: TextStyle(fontSize: 10, color: Colors.white),
+              style: TextStyle(fontSize: 10, color: textColor),
             ),
           ],
         ),
