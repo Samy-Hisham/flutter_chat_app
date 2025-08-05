@@ -45,16 +45,20 @@ class ThemeProvider with ChangeNotifier {
     return _themeMode == ThemeMode.light ? Colors.white : Colors.white;
   }
 
-  Color get wordsColor {
-    return _themeMode == ThemeMode.light ? Helpers.kPrimaryWordsColor : Helpers.kSecondaryWordsColor;
-  }
+  // Color get textFiledColor {
+  //   return _themeMode == ThemeMode.light ? Colors.black : Colors.black;
+  // }
+
+  // Color get wordsColor {
+  //   return _themeMode == ThemeMode.light ? Helpers.kPrimaryWordsColor : Helpers.kSecondaryWordsColor;
+  // }
 
   Color get appBarColor {
     return _themeMode == ThemeMode.light ? Helpers.kPrimaryColor : Helpers.kSecondaryColor;
   }
 
   Color get backgroundColor {
-    return _themeMode == ThemeMode.light ?  Helpers.kPrimaryBgColor :  Helpers.kSecondaryBgColor;
+    return _themeMode == ThemeMode.light ?  Helpers.kPrimaryWordsColor :  Helpers.kSecondaryBgColor;
   }
 
   Color get bubbleColor {
